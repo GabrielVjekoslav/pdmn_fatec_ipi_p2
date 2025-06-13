@@ -1,5 +1,5 @@
-import React from 'react';
-import ListaPrevisao from './components/ListaPrevisao';
+import React from 'react'
+import ListaPrevisao from './components/ListaPrevisao'
 
 function App() {
   return (

@@ -13,7 +13,7 @@ const openWeatherClient = axios.create({
 app.get('/search', async (req, res) => {
     const city = req.query.query
     if (!city) {
-        return res.status(400).json({ erro: 'Parâmetro "query" é obrigatório.' });
+        return res.status(400).json({ erro: 'Parâmetro "query" é obrigatório.' })
     }
     try {
         const response = await openWeatherClient.get('forecast', {

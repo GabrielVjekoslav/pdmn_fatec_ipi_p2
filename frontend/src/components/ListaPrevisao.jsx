@@ -1,5 +1,6 @@
 import React from 'react'
 import Busca from './Busca'
+import striptags from 'striptags'
 
 export default class ListaPrevisao extends React.Component {
   state = {
@@ -7,14 +8,14 @@ export default class ListaPrevisao extends React.Component {
   }
 
   onBuscaRealizada = async (termo) => {
-    const response = await fetch(`http://localhost:3000/search?query=${termo}`);
+    const response = await fetch(`http://localhost:3000/search?query=${termo}`)
 
     if (!response.ok) {
-      console.error('Erro ao obter a previsão');
-      this.setState({ previsoes: [] });
-      return;
+      console.error('Erro ao obter a previsão')
+      this.setState({ previsoes: [] })
+      return
     }
-    const data = await response.json();
+    const data = await response.json()
     try {
 
       const previsoes = data.list.map(p => ({
@@ -24,7 +25,7 @@ export default class ListaPrevisao extends React.Component {
         icone: p.icon,
         descricao: p.description,
         dataHora: new Date(p.dt * 1000)
-      }));
+      }))
       this.setState({ previsoes })
     } catch (erro) {
       console.error('Erro ao buscar previsões:', erro)
@@ -59,7 +60,7 @@ export default class ListaPrevisao extends React.Component {
                       minute: '2-digit'
                     })}
                   </span>
-                  <span className="capitalize text-sm text-gray-700 mb-1">{p.descricao}</span>
+                  <span className="capitalize text-sm text-gray-700 mb-1">{striptags(p.descricao)}</span>
                   <span className="text-sm text-gray-600">
                     <strong>Mín:</strong> {p.min.toFixed(1)}°C | <strong>Máx:</strong> {p.max.toFixed(1)}°C
                   </span>
