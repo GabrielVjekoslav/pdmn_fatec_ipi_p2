@@ -1,18 +1,18 @@
-import React from 'react';
-import Busca from './Busca';
-import axios from 'axios';
+import React from 'react'
+import Busca from './Busca'
+import axios from 'axios'
 
 export default class ListaPrevisao extends React.Component {
   state = {
     previsoes: []
-  };
+  }
 
   onBuscaRealizada = async (termo) => {
-    const apiKey = import.meta.env.VITE_OPENWEATHER_KEY;
-    const url = `https://api.openweathermap.org/data/2.5/forecast?q=${termo}&appid=${apiKey}&units=metric&lang=pt_br`;
+    const apiKey = import.meta.env.VITE_OPENWEATHER_KEY
+    const url = `https://api.openweathermap.org/data/2.5/forecast?q=${termo}&appid=${apiKey}&units=metric&lang=pt_br`
 
     try {
-      const resposta = await axios.get(url);
+      const resposta = await axios.get(url)
       const previsoes = resposta.data.list.map(p => ({
         min: p.main.temp_min,
         max: p.main.temp_max,
@@ -20,13 +20,13 @@ export default class ListaPrevisao extends React.Component {
         icone: p.weather[0].icon,
         descricao: p.weather[0].description,
         dataHora: new Date(p.dt_txt)
-      }));
-      this.setState({ previsoes });
+      }))
+      this.setState({ previsoes })
     } catch (erro) {
-      console.error('Erro ao buscar previsões:', erro);
-      this.setState({ previsoes: [] });
+      console.error('Erro ao buscar previsões:', erro)
+      this.setState({ previsoes: [] })
     }
-  };
+  }
 
   render() {
     return (
@@ -68,6 +68,6 @@ export default class ListaPrevisao extends React.Component {
           ))}
         </div>
       </div>
-    );
+    )
   }
 }
