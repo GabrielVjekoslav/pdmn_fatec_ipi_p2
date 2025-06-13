@@ -1,43 +1,25 @@
 import React from 'react'
-import Busca from './Busca'
-import axios from 'axios'
 
 export default class ListaPrevisao extends React.Component {
-  state = {
-    previsoes: []
-  }
-
-  onBuscaRealizada = async (termo) => {
-    const apiKey = import.meta.env.VITE_OPENWEATHER_KEY
-    const url = `https://api.openweathermap.org/data/2.5/forecast?q=${termo}&appid=${apiKey}&units=metric&lang=pt_br`
-
-    try {
-      const resposta = await axios.get(url)
-      const previsoes = resposta.data.list.map(p => ({
-        min: p.main.temp_min,
-        max: p.main.temp_max,
-        umidade: p.main.humidity,
-        icone: p.weather[0].icon,
-        descricao: p.weather[0].description,
-        dataHora: new Date(p.dt_txt)
-      }))
-      this.setState({ previsoes })
-    } catch (erro) {
-      console.error('Erro ao buscar previsões:', erro)
-      this.setState({ previsoes: [] })
-    }
-  }
-
   render() {
-    return (
-      <div className="p-4 max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold text-center mb-6">Previsão do Tempo</h1>
-        <div className="mb-6">
-          <Busca onBuscaRealizada={this.onBuscaRealizada} />
-        </div>
+    const { previsoes } = this.props
+    
+    if (!previsoes || !previsoes.list) {
+      return null
+    }
+    
+    const previsoesMapeadas = previsoes.list.map(p => ({
+      min: p.main.temp_min,
+      max: p.main.temp_max,
+      umidade: p.main.humidity,
+      icone: p.weather[0].icon,
+      descricao: p.weather[0].description,
+      dataHora: new Date(p.dt_txt)
+    }))
 
-        <div className="grid">
-          {this.state.previsoes.map((p, i) => (
+    return (
+      <div className="grid">
+        {previsoesMapeadas.map((p, i) => (
             <div key={i} className="col-12 md:col-6 lg:col-4">
               <div className="surface-card shadow-2 border-round p-3 flex align-items-center gap-3">
                 <img
@@ -67,7 +49,6 @@ export default class ListaPrevisao extends React.Component {
             </div>
           ))}
         </div>
-      </div>
     )
   }
 }
