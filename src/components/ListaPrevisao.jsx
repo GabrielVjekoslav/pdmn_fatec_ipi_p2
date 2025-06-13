@@ -1,6 +1,5 @@
 import React from 'react'
 import Busca from './Busca'
-import axios from 'axios'
 
 export default class ListaPrevisao extends React.Component {
   state = {
@@ -8,19 +7,24 @@ export default class ListaPrevisao extends React.Component {
   }
 
   onBuscaRealizada = async (termo) => {
-    const apiKey = import.meta.env.VITE_OPENWEATHER_KEY
-    const url = `https://api.openweathermap.org/data/2.5/forecast?q=${termo}&appid=${apiKey}&units=metric&lang=pt_br`
+    const response = await fetch(`http://localhost:3000/search?query=${termo}`);
 
+    if (!response.ok) {
+      console.error('Erro ao obter a previsão');
+      this.setState({ previsoes: [] });
+      return;
+    }
+    const data = await response.json();
     try {
-      const resposta = await axios.get(url)
-      const previsoes = resposta.data.list.map(p => ({
-        min: p.main.temp_min,
-        max: p.main.temp_max,
-        umidade: p.main.humidity,
-        icone: p.weather[0].icon,
-        descricao: p.weather[0].description,
-        dataHora: new Date(p.dt_txt)
-      }))
+
+      const previsoes = data.list.map(p => ({
+        min: p.temp_min,
+        max: p.temp_max,
+        umidade: p.humidity,
+        icone: p.icon,
+        descricao: p.description,
+        dataHora: new Date(p.dt * 1000)
+      }));
       this.setState({ previsoes })
     } catch (erro) {
       console.error('Erro ao buscar previsões:', erro)
