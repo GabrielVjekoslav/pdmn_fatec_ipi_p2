@@ -33,24 +33,15 @@ export default class ListaPrevisao extends React.Component {
   }
 
   render() {
-    const { previsoes } = this.props
-    
-    if (!previsoes || !previsoes.list) {
-      return null
-    }
-    
-    const previsoesMapeadas = previsoes.list.map(p => ({
-      min: p.main.temp_min,
-      max: p.main.temp_max,
-      umidade: p.main.humidity,
-      icone: p.weather[0].icon,
-      descricao: p.weather[0].description,
-      dataHora: new Date(p.dt_txt)
-    }))
-
     return (
-      <div className="grid">
-        {previsoesMapeadas.map((p, i) => (
+      <div className="p-4 max-w-6xl mx-auto">
+        <h1 className="text-3xl font-bold text-center mb-6">Previsão do Tempo</h1>
+        <div className="mb-6">
+          <Busca onBuscaRealizada={this.onBuscaRealizada} />
+        </div>
+
+        <div className="grid">
+          {this.state.previsoes.map((p, i) => (
             <div key={i} className="col-12 md:col-6 lg:col-4">
               <div className="surface-card shadow-2 border-round p-3 flex align-items-center gap-3">
                 <img
@@ -80,6 +71,7 @@ export default class ListaPrevisao extends React.Component {
             </div>
           ))}
         </div>
+      </div>
     )
   }
 }
